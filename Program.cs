@@ -36,7 +36,7 @@ class WordDocument : Document
 {
     public int PageCount { get; set; }
 
-    public WordDocument(string name, string author, string keywords, string topic, string filePath, string pageCount)
+    public WordDocument(string name, string author, string keywords, string topic, string filePath, int pageCount)
         : base(name, author, keywords, topic, filePath)
     {
         PageCount = pageCount;
@@ -118,5 +118,53 @@ class HTMLDocument : Document
     {
         base.GetInfo();
         Console.WriteLine($"Кодировка: {Encoding}");
+    }
+}
+
+class DocumentMenu
+{
+    private static DocumentMenu? instance;
+    public static DocumentMenu Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = new DocumentMenu();
+            return instance;
+        }
+    }
+
+    public void ShowMenu()
+    {
+        Console.WriteLine("Выберите тип документа:");
+        Console.WriteLine("1. MS Word");
+        Console.WriteLine("2. PDF");
+        Console.WriteLine("3. MS Excel");
+        Console.WriteLine("4. TXT");
+        Console.WriteLine("5. HTML");
+        Console.WriteLine("Введите номер документа: ");
+
+        int choice = int.Parse(Console.ReadLine());
+
+        Document doc = choice switch
+        {
+            1 => new WordDocument("Документ", "Автор", "Ключи", "Тема", "путь", 10),
+            2 => new PDFDocument("Документ", "Автор", "Ключи", "Тема", "путь", true),
+            3 => new ExcelDocument("Документ", "Автор", "Ключи", "Тема", "путь", 5),
+            4 => new TXTDocument("Документ", "Автор", "Ключи", "Тема", "путь", 1024),
+            5 => new HTMLDocument("Документ", "Автор", "Ключи", "Тема", "путь", "UTF-8"),
+            _ => throw new ArgumentException("Некорректный выбор!")
+        };
+
+        Console.WriteLine("\nИнформация о документе:");
+        doc.GetInfo();
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        DocumentMenu.Instance.ShowMenu();
     }
 }
